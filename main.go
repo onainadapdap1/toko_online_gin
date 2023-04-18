@@ -14,6 +14,7 @@ func drop(db *gorm.DB) {
 	db.DropTableIfExists(
 		&models.User{},
 		&models.Category{},
+		&models.Product{},
 	)
 }
 

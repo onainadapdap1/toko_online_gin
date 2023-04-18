@@ -18,6 +18,7 @@ type User struct {
 	Role           string `json:"role"`
 	AvatarFileName string
 	Category []Category
+	Product []Product
 }
 
 // naming convention

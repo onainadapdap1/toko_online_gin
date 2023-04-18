@@ -9,7 +9,10 @@ import (
 
 type ProductRepoInterface interface {
 	CreateProduct(product models.Product) (models.Product, error)
+	UpdateProduct(product models.Product) (models.Product, error)
 	GetCategoryByID(id uint) (models.Category, error)
+	FindProductBySlug(slug string) (models.Product, error)
+	FindAllProduct() ([]models.Product, error)
 }
 
 type productRepository struct {
@@ -47,4 +50,43 @@ func (r *productRepository)	GetCategoryByID(id uint) (models.Category, error) {
 	}
 
 	return category, nil
+}
+
+func (r *productRepository) FindProductBySlug(slug string) (models.Product, error) {
+	tx := r.db.Begin()
+	var product models.Product
+	err := tx.Debug().Preload("User").Preload("Category").Where("slug = ?", slug).Find(&product).Error
+	if err != nil {
+		return product, err
+	}
+
+	return product, nil
+}
+
+func (r *productRepository) UpdateProduct(product models.Product) (models.Product, error) {
+	tx := r.db.Begin()
+
+	err := tx.Debug().Save(&product).Error
+	if err != nil {
+		tx.Rollback()
+		return product, err
+	}
+	tx.Commit()
+	return product, nil
+}
+
+func (r *productRepository) FindAllProduct() ([]models.Product, error) {
+	tx := r.db.Begin()
+	products := []models.Product{}
+
+	// SELECT *
+	// FROM products
+	// LEFT JOIN users ON products.user_id = users.id
+	// LEFT JOIN categories ON products.category_id = categories.id;
+	err := tx.Debug().Preload("User").Preload("Category").Find(&products).Error
+	if err != nil {
+		return products, err
+	}
+	
+	return products, nil
 }

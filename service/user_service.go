@@ -42,7 +42,7 @@ func (s *userService) RegisterUser(input *models.RegisterUserInput) (*models.Use
 
 func (s *userService) LoginUser(input models.LoginUserInput) (models.User, error) {
 	email := input.Email
-	password := input.Password
+	inputPassword := input.Password
 
 	user, err := s.repo.FindByEmail(email)
 	if err != nil {
@@ -53,7 +53,7 @@ func (s *userService) LoginUser(input models.LoginUserInput) (models.User, error
 		return user, errors.New("no user found on that email")
 	}
 
-	comparePass := helpers.ComparePassword([]byte(user.Password), []byte(password))
+	comparePass := helpers.ComparePassword([]byte(user.Password), []byte(inputPassword))
 	if !comparePass {
 		return user, err
 	}

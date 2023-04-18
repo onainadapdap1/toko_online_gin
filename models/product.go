@@ -15,6 +15,8 @@ type Product struct {
 	ImageURL string
 	CategoryID uint
 	Category Category
+	UserID uint
+	User User
 }
 
 func (p *Product) TableName() string {

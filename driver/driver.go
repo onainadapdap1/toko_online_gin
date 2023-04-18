@@ -3,14 +3,15 @@ package driver
 import (
 	"fmt"
 	"log"
+
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	_ "github.com/jinzhu/gorm/dialects/mysql"	
 
 	"github.com/jinzhu/gorm"
 )
 
 var (
-	DB *gorm.DB
+	DB  *gorm.DB
 	err error
 )
 
@@ -29,10 +30,10 @@ func ConnectDB() *gorm.DB {
 	}
 
 	if err != nil {
-		log.Println( "[Driver.ConnectDB] error when connect to database")
+		log.Println("[Driver.ConnectDB] error when connect to database")
 		log.Fatal(err)
 	} else {
-		log.Println( "SUCCESS CONNECT TO DATABASE")
+		log.Println("SUCCESS CONNECT TO DATABASE")
 	}
 
 	return DB
